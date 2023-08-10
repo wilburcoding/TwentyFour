@@ -2,6 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { Icon } from '@rneui/themed';
+import { Appearance } from 'react-native';
+
+
 export default function App() {
   const [combo, setCombo] = useState<string[]>([]);
   const [solution, setSolution] = useState<string[]>([]);
@@ -12,6 +15,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const [start, setStart] = useState(false);
+  
   async function generateCombo() {
     var types: string[] = ["-", "+", "*", "*", "-", "+", "/"];
     var result: string[] = [];
@@ -219,7 +223,13 @@ export default function App() {
 
         {answer ? (
           <View style={{ alignContent: "flex-start", marginLeft: 25 }}>
-            <Text style={[styles.mainText, { fontSize: 60, marginBottom: 10, marginTop: 30 }]}>Solutions</Text>
+            <View style={{flexDirection:"row", justifyContent:"flex-start"}}>
+              <Text style={[styles.mainText, { fontSize: 45, marginBottom: 10, marginTop: 30, alignSelf:"flex-start" }]}>Solutions</Text>
+              <TouchableOpacity style={{ height: 35, maxWidth: 60, paddingHorizontal: 10, paddingVertical: 5, marginTop: 40, marginLeft: 10, backgroundColor: (solution.length < 5 ? "#FF7A65" : solution.length < 10 ? "#FFBE65" : "#FDFF65"),alignSelf:"flex-start" ,borderRadius:15}}>
+                <Text style={{fontSize:20}}>{solution.length}</Text>
+              </TouchableOpacity>
+
+            </View>
             <ScrollView style={{ paddingBottom: 20, maxHeight: 450 }}>
               {
                 solution.map((item, index) => (
@@ -334,7 +344,7 @@ const styles = StyleSheet.create({
     width: 190
   },
   container: {
-    flex: 1,
+    flex:1,
     backgroundColor: '#fff',
     justifyContent: 'center',
   },
