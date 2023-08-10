@@ -97,6 +97,19 @@ export default function App() {
           newL.push(newGen[0]);
           newGen.splice(0, 1);
           for (let l = 0; l < permutations.length; l++) {
+            var perm = permutations[l];
+            var result: number = eval("(" + newL[0] + perm[0] + newL[1] + ")" + perm[1] + "(" + newL[2] + perm[2] + newL[3] + ")")
+            if (result == 24) {
+              var newStr = "(" + newL[0] + " " + perm[0] + " " + newL[1] + ") " + perm[1] + " (" + newL[2] + " " + perm[2] + " " + newL[3] + ")&&";
+              newStr += newL[0] + " " + perm[0] + " " + newL[1] + " = " + eval(newL[0] + " " + perm[0] + " " + newL[1]) + "\n";
+              newStr += newL[2] + " " + perm[2] + " " + newL[3] + " = " + eval(newL[2] + " " + perm[2] + " " + newL[3]) + "\n";
+              newStr += eval(newL[0] + " " + perm[0] + " " + newL[1]) + " " + perm[1] + " " + eval(newL[2] + " " + perm[2] + " " + newL[3]) + " = 24\n";
+              succesful.push(newStr)
+
+
+            }
+          }
+          for (let l = 0; l < permutations.length; l++) {
             var result = newL[0];
             var perm = permutations[l];
             for (let m = 0; m < 3; m++) {
@@ -122,7 +135,7 @@ export default function App() {
                 newStr += " " + perm[n - 1] + " " + newL[n] + ")";
               }
               newStr += "&&"
-              var result = newL[0];
+              result = newL[0];
 
               for (let m = 0; m < 3; m++) {
                 var num = newL[m + 1];
@@ -159,6 +172,8 @@ export default function App() {
 
       }
     }
+
+
     return succesful;
   }
   const perms = generatePermutations();
