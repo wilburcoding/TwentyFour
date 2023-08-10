@@ -1,8 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { Icon } from '@rneui/themed';
-import { Appearance } from 'react-native';
 
 
 export default function App() {
@@ -14,8 +12,8 @@ export default function App() {
   const [nums, setNums] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
-  const [start, setStart] = useState(false);
-  
+  const [practice, setPractice] = useState(false);
+
   async function generateCombo() {
     var types: string[] = ["-", "+", "*", "*", "-", "+", "/"];
     var result: string[] = [];
@@ -62,8 +60,7 @@ export default function App() {
       }
 
     }
-    const newCombo = await generateCombo()
-    setCombo(newCombo);
+    const newCombo = await generateCombo();
     return await generateNumbers(newCombo);
 
   }
@@ -184,7 +181,6 @@ export default function App() {
   async function generate() {
     try {
       const newCombo = await generateCombo()
-      setCombo(newCombo);
       const genNums = await generateNumbers(newCombo)
       setNums(genNums);
       const perms = await generatePermutations();
@@ -193,7 +189,6 @@ export default function App() {
         return self.indexOf(item) == pos;
       })
       setSolution(solutions);
-      setStart(true);
     } catch (error) {
       setError(error);
     } finally {
@@ -202,6 +197,7 @@ export default function App() {
 
   }
   function begin() {
+    setPractice(true);
     setAnswer(false);
     setSelected(-1);
     setIsLoading(true);
@@ -211,7 +207,7 @@ export default function App() {
   function back() {
     setAnswer(false);
     setSelected(-1);
-    setStart(false)
+    setPractice(false)
     setError(null);
   }
   function showAnswer() {
@@ -223,10 +219,10 @@ export default function App() {
 
         {answer ? (
           <View style={{ alignContent: "flex-start", marginLeft: 25 }}>
-            <View style={{flexDirection:"row", justifyContent:"flex-start"}}>
-              <Text style={[styles.mainText, { fontSize: 45, marginBottom: 10, marginTop: 30, alignSelf:"flex-start" }]}>Solutions</Text>
-              <TouchableOpacity style={{ height: 35, maxWidth: 60, paddingHorizontal: 10, paddingVertical: 5, marginTop: 40, marginLeft: 10, backgroundColor: (solution.length < 5 ? "#FF7A65" : solution.length < 10 ? "#FFBE65" : "#FDFF65"),alignSelf:"flex-start" ,borderRadius:15}}>
-                <Text style={{fontSize:20}}>{solution.length}</Text>
+            <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+              <Text style={[styles.mainText, { fontSize: 45, marginBottom: 10, marginTop: 30, alignSelf: "flex-start" }]}>Solutions</Text>
+              <TouchableOpacity style={{ height: 35, maxWidth: 60, paddingHorizontal: 10, paddingVertical: 5, marginTop: 40, marginLeft: 10, backgroundColor: (solution.length < 5 ? "#FF7A65" : solution.length < 10 ? "#FF936A" : solution.length < 15 ? "#FFC76A" : "#FFFD6A"), alignSelf: "flex-start", borderRadius: 15 }}>
+                <Text style={{ fontSize: 20, fontWeight: "700"}}>{solution.length}</Text>
               </TouchableOpacity>
 
             </View>
@@ -274,21 +270,26 @@ export default function App() {
             </TouchableOpacity>
 
           </View>
-        ) : start ? (
+        ) : practice ? (
           <View>
-          
+
             {solution.length < 5 ? (
               <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FF7A65" }}>
-                <Text style={{ fontWeight: "800", fontSize: 30 }}>Hard</Text>
+                <Text style={{ fontWeight: "800", fontSize: 30 }}>Expert</Text>
               </View>
-            ) : solution.length < 10 ? (
-              <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FFBE65" }}>
+            ) : solution.length < 9 ? (
+              <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FF936A" }}>
+                <Text style={{ fontWeight: "800", fontSize: 30 }}>Advanced</Text>
+              </View>
+            ) : solution.length < 15 ? (
+              <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FFC76A" }}>
                 <Text style={{ fontWeight: "800", fontSize: 30 }}>Intermediate</Text>
               </View>
             ) : (
-              <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FDFF65" }}>
+              <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FFFD6A" }}>
                 <Text style={{ fontWeight: "800", fontSize: 30 }}>Easy</Text>
-              </View>)}
+              </View>
+            )}
             <View>
               <View style={[styles.numBox, { alignSelf: "center" }]}>
                 <Text style={{ fontSize: 80, fontWeight: "600", textAlign: "center" }} >{nums[0]}</Text>
@@ -310,7 +311,7 @@ export default function App() {
 
               </View>
               <TouchableOpacity onPress={showAnswer} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "center", marginTop: 20, width: 200 }]}><Text style={{ fontSize: 30, fontWeight: "900" }}>Solution</Text></TouchableOpacity>
-              
+
             </View>
           </View>
 
@@ -344,7 +345,7 @@ const styles = StyleSheet.create({
     width: 190
   },
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
   },
