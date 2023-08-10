@@ -4,11 +4,10 @@ import { Icon } from '@rneui/themed';
 
 
 export default function App() {
-  const [hard, setHard] = useState<boolean>(false);
   const [solution, setSolution] = useState<string[]>([]);
   const [selected, setSelected] = useState(-1);
   const [answer, setAnswer] = useState(false);
-
+  const [hard, setHard] = useState<boolean>(true);
   const [nums, setNums] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
@@ -34,7 +33,6 @@ export default function App() {
   }
   async function generateNumbers(combo: string[]): Promise<number[]> {
     for (let k = 0; k < 2000; k++) {
-      console.log(hard)
       var result = Math.floor(Math.random() * (hard ? 16 : 9) + 1);
       var nums: number[] = [result];
       for (let i = 0; i < 3; i++) {
@@ -212,8 +210,9 @@ export default function App() {
     setPractice(false)
     setError(null);
   }, [])
-
-  
+ function changeMode() {
+    setHard(!hard);
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -265,12 +264,11 @@ export default function App() {
             </ScrollView>
             <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
               <TouchableOpacity onPress={async () => begin()} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "flex-start", marginTop: 20, width: 200 }]}><Text style={{ fontSize: 30, fontWeight: "900" }}>Next</Text></TouchableOpacity>
+                <TouchableOpacity onPress={back} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "flex-end", marginTop: 0, width: 50, padding: 9, marginLeft: 5, height: 55,  backgroundColor: "none" }]}>
+                  <Icon
+                    name='logout' style={{ height: 70, width: 70, fontSize: 50 }} size={33} />
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={back} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "flex-end", marginTop: 0, width: 50, padding: 9, marginLeft: 5, height: 55, position: "absolute", backgroundColor: "none" }]}>
-              <Icon
-                name='logout' style={{ height: 70, width: 70, fontSize: 50 }} size={33} />
-            </TouchableOpacity>
-
           </View>
         ) : practice ? (
           <View>
@@ -320,7 +318,7 @@ export default function App() {
         ) : (
           <View style={{ alignContent: "flex-start", paddingLeft: 25 }}>
             <Text style={[styles.mainText, {marginBottom:0}]}>24 Practice</Text>
-            <Text onPress={() => setHard(!hard)} style={[styles.mainText, {fontSize:15, marginBottom:10, fontWeight:"400"}]}>{hard ? "Hard Mode (up to 16)" : "Normal Mode (up to 9)"}</Text>
+            <Text onPress={changeMode} style={[styles.mainText, {fontSize:15, marginBottom:10, fontWeight:"400"}]}>{hard ? "Hard Mode (up to 16)" : "Normal Mode (up to 9)"}</Text>
             <TouchableOpacity style={styles.start}><Text onPress={async () => begin()} style={{ fontSize: 30, fontWeight: "900" }}>Practice</Text></TouchableOpacity>
           </View>
         )}
