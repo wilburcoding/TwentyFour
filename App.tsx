@@ -267,11 +267,11 @@ export default function App() {
         ) : start ? (
           <View>
           
-            {solution.length < 4 ? (
+            {solution.length < 5 ? (
               <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FF7A65" }}>
                 <Text style={{ fontWeight: "800", fontSize: 30 }}>Hard</Text>
               </View>
-            ) : solution.length < 8 ? (
+            ) : solution.length < 10 ? (
               <View style={{ width: 200, height: 50, marginBottom: 30, justifyContent: "center", alignSelf: "center", alignItems: "center", borderRadius: 10, backgroundColor: "#FFBE65" }}>
                 <Text style={{ fontWeight: "800", fontSize: 30 }}>Intermediate</Text>
               </View>
