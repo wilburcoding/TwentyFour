@@ -185,26 +185,19 @@ export default function App() {
   function begin() {
     setAnswer(false);
     setSelected(-1);
-
     setIsLoading(true);
     setError(null);
-    console.log('ea');
     generate();
-    console.log('eaf');
-
   }
   function back() {
     setAnswer(false);
     setSelected(-1);
     setStart(false)
     setError(null);
-
   }
   function showAnswer() {
     setAnswer(true);
   }
-
-
   return (
     <SafeAreaView style={styles.container}>
       <View>
