@@ -1,10 +1,10 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Icon } from '@rneui/themed';
 
 
 export default function App() {
-  const [combo, setCombo] = useState<string[]>([]);
+  const [hard, setHard] = useState<boolean>(false);
   const [solution, setSolution] = useState<string[]>([]);
   const [selected, setSelected] = useState(-1);
   const [answer, setAnswer] = useState(false);
@@ -34,10 +34,11 @@ export default function App() {
   }
   async function generateNumbers(combo: string[]): Promise<number[]> {
     for (let k = 0; k < 2000; k++) {
-      var result = Math.floor(Math.random() * 9 + 1);
+      console.log(hard)
+      var result = Math.floor(Math.random() * (hard ? 16 : 9) + 1);
       var nums: number[] = [result];
       for (let i = 0; i < 3; i++) {
-        var genNum: number = Math.floor(Math.random() * 9 + 1)
+        var genNum: number = Math.floor(Math.random() * (hard?16:9) + 1)
         switch (combo[i]) {
           case "+":
             result += genNum;
@@ -196,28 +197,31 @@ export default function App() {
     }
 
   }
-  function begin() {
+  const begin = useCallback(() => {
     setPractice(true);
     setAnswer(false);
     setSelected(-1);
     setIsLoading(true);
     setError(null);
     generate();
-  }
-  function back() {
+    // do something asynchronous
+  }, []); 
+  const back = useCallback(() => {
     setAnswer(false);
     setSelected(-1);
     setPractice(false)
     setError(null);
-  }
-  function showAnswer() {
-    setAnswer(true);
-  }
+  }, [])
+
+  
   return (
     <SafeAreaView style={styles.container}>
       <View>
-
-        {answer ? (
+        {isLoading ? (
+          <View>
+            <ActivityIndicator size='large' color="black" />
+          </View>
+        ) : answer ? (
           <View style={{ alignContent: "flex-start", marginLeft: 25 }}>
             <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
               <Text style={[styles.mainText, { fontSize: 45, marginBottom: 10, marginTop: 30, alignSelf: "flex-start" }]}>Solutions</Text>
@@ -235,7 +239,7 @@ export default function App() {
                     } else {
                       setSelected(index);
                     }
-                  }} key={index} style={{ paddingVertical: 5, borderColor: "black", borderWidth: 2, borderRadius: 10, paddingHorizontal: 20, margin: 5, width: 300 }}>
+                  }} key={index} style={{ paddingVertical: 5, borderColor: "black", borderWidth: 2, borderRadius: 10, paddingHorizontal: 10, margin: 5, width: 300 }}>
                     {selected == index ? (
                       <View>
                         <Text style={{ fontSize: 30, fontWeight: "700" }} > {item.split("&&")[0]}</Text>
@@ -260,9 +264,7 @@ export default function App() {
 
             </ScrollView>
             <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-              <TouchableOpacity onPress={begin} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "flex-start", marginTop: 20, width: 200 }]}><Text style={{ fontSize: 30, fontWeight: "900" }}>Next</Text></TouchableOpacity>
-
-
+              <TouchableOpacity onPress={async () => begin()} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "flex-start", marginTop: 20, width: 200 }]}><Text style={{ fontSize: 30, fontWeight: "900" }}>Next</Text></TouchableOpacity>
             </View>
             <TouchableOpacity onPress={back} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "flex-end", marginTop: 0, width: 50, padding: 9, marginLeft: 5, height: 55, position: "absolute", backgroundColor: "none" }]}>
               <Icon
@@ -310,22 +312,16 @@ export default function App() {
                 <Text style={{ fontSize: 80, fontWeight: "600", alignSelf: "center" }} >{nums[3]}</Text>
 
               </View>
-              <TouchableOpacity onPress={showAnswer} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "center", marginTop: 20, width: 200 }]}><Text style={{ fontSize: 30, fontWeight: "900" }}>Solution</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => setAnswer(true)} style={[styles.start, { alignItems: "center", justifyContent: "center", alignSelf: "center", marginTop: 20, width: 200 }]}><Text style={{ fontSize: 30, fontWeight: "900" }}>Solution</Text></TouchableOpacity>
 
             </View>
           </View>
 
-        ) : isLoading ? (
-          <View>
-            <ActivityIndicator size='large' color="black" />
-
-            <Text style={{ fontSize: 20 }}>Start</Text>
-          </View>
-
         ) : (
           <View style={{ alignContent: "flex-start", paddingLeft: 25 }}>
-            <Text style={styles.mainText}>24 Practice</Text>
-            <TouchableOpacity style={styles.start}><Text onPress={() => begin()} style={{ fontSize: 30, fontWeight: "900" }}>Practice</Text></TouchableOpacity>
+            <Text style={[styles.mainText, {marginBottom:0}]}>24 Practice</Text>
+            <Text onPress={() => setHard(!hard)} style={[styles.mainText, {fontSize:15, marginBottom:10, fontWeight:"400"}]}>{hard ? "Hard Mode (up to 16)" : "Normal Mode (up to 9)"}</Text>
+            <TouchableOpacity style={styles.start}><Text onPress={async () => begin()} style={{ fontSize: 30, fontWeight: "900" }}>Practice</Text></TouchableOpacity>
           </View>
         )}
       </View>
